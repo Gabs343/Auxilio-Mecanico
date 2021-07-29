@@ -1,0 +1,167 @@
+@startuml
+
+
+package Auxilio {
+	package Test {
+		class AuxilioTest {
+		}
+	}
+
+	package service {
+		class AuxilioService {
+		  - Auxilio auxilio
+		  - PedidoService pedidoService
+		  - TipoAuxilioService tipoAuxilioService
+		  - ClienteService clienteService
+		  - VehiculoService vehiculoService
+		  - CoberturaService coberturaService
+		  
+		  + Auxilio nuevoAuxilio()
+		  + listaAuxiliosDisponibles()
+		  + TipoAuxilio getAuxilio(descripcion)
+		  + agregarAuxilioDisponible(TipoAuxilio)
+		  + sacarAuxilioDisponible()
+		  
+		  + agregarPedido(Pedido)
+
+			
+		}
+	
+		class PedidoService {
+			+ Pedido crearPedido()
+		}
+		
+		class ClienteService {
+			+ Cliente crearCliente()
+			+ esMoroso(Cliente)
+		}
+		
+		class VehiculoService {
+		 	+ crearVehiculo()
+			+ sumarReparacion()
+			+ sumarRemolque()
+			+ obtenerTotalServicios()
+		}
+		
+		class TipoAuxilioService {
+			+ TipoAuxilio crearTipoAuxilio()
+
+		}
+		
+		class CoberturaService() {
+			 + crearEconomic()
+			 + crearClassic()
+			 + crearPlatinum()
+			 
+			 + permiteReparacion(Cobertura)
+			 + permiteRemolque(Cobertura)
+			 + limiteReparacion(Cobertura)
+			 + limiteRemolque(Cobertura)
+		}
+	}
+
+	package domain {
+		class Auxilio {
+			- List<Pedido> pedidos
+			- List<TipoAuxilio> auxiliosDisponibles
+			- List<Clinete> clientes
+		}	
+	
+		class Pedido {
+			- String lugar
+			- Client cliente
+			- Vehiculo vehiculo
+			- TipoAuxilio tipoAuxilio
+			- Cobertura cobertura
+			- BigDecimal costo
+	    }	
+
+		class Cliente {
+			String nombre
+			String apellido
+			Vehiculo vehiculos
+			Cobertura cobertura
+			Boolean moroso
+			BigDecimal costo
+		}
+
+		class Vehiculo {
+			String patente
+			Double peso
+			Integer cantidadReparaciones
+			Integer cantidadRemolques
+		}
+
+		abstract class Cobertura {
+			TipoCobertura tipoCobertura
+			Boolean permiteRemolque
+			Integer limiteRemolque
+			TipoReparacion tipoReparacion
+			Integer limiteReparacion
+			
+	
+			{abstract} Boolean permiteRemolque()
+			{abstract} TipoReparacion tipoReparacion()
+
+		}
+		
+		class Economic {
+			Boolean permiteRemolque()
+			TipoReparacion tipoReparacion()
+		}
+
+		class Classic {
+			Boolean permiteRemolque()
+			TipoReparacion tipoReparacion()
+		}
+
+		class Platinum {
+			Boolean permiteRemolque()
+			TipoReparacion tipoReparacion()
+		}
+
+		class TipoAuxilio {
+			String descripcion
+			TipoReparacion tipoReparacion
+			Boolean necesitaRemolque
+			BigDecimal costoUnitario
+		} 
+		
+		enum TipoReparacion {
+			NINGUNO
+			SIMPLE
+			COMPLEJO
+		}
+		
+		enum TipoCobertura {
+			ECONOMIC
+			CLASSIC
+			PLATINUM
+		}
+	}
+	
+
+	Auxilio "0..*" -- "1..*" Pedido
+	Pedido "1" -- "1" Cliente
+	Pedido "1" -- "1" Vehiculo
+	Pedido "1" -- "1" TipoAuxilio
+	Pedido "1" -- "1" Cobertura
+
+	Cliente "0..*" -- "1" Cobertura
+	Cliente "1" -- "1" Vehiculo
+
+	Cobertura <|-- Economic
+	Cobertura <|-- Classic
+	Cobertura <|-- Platinum
+	
+	Cobertura .. TipoCobertura
+	
+	Auxilio "1" -- "1..*" TipoAuxilio
+	
+	TipoReparacion .. TipoAuxilio
+	TipoReparacion .. Cobertura
+	
+				
+}
+
+@enduml
