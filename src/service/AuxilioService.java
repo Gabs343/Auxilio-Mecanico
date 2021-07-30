@@ -41,6 +41,7 @@ public class AuxilioService {
 		try {
 			if(p.getTipoAuxilio().isNecesitaRemolque()) {
 				vehiculoServ.sumarRemolques(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos()));
+				
 				if(coberturaServ.permiteRemolque(p.getCliente())) {
 		
 					responderConCamion(p);
@@ -49,6 +50,7 @@ public class AuxilioService {
 						pagoServ.pagoPedido(p, pedidoServ.pedidosSinPagarDeCliente(p.getCliente(), auxilio.getPedidos()));
 					}
 					
+					p.getCliente().getVehiculo().setReparaciones(vehiculoServ.getTotalReparaciones(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos())));
 					auxilio.addPedido(p);
 					
 				}else {
@@ -56,6 +58,7 @@ public class AuxilioService {
 				}
 			}else {
 				vehiculoServ.sumarReparaciones(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos()));
+				
 				if(coberturaServ.permiteReparacion(p.getCliente())) {
 					
 					responderConCamion(p);
@@ -64,6 +67,7 @@ public class AuxilioService {
 						pagoServ.pagoPedido(p, pedidoServ.pedidosSinPagarDeCliente(p.getCliente(), auxilio.getPedidos()));
 					}
 					
+					p.getCliente().getVehiculo().setRemolques(vehiculoServ.getTotalRemolques(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos())));
 					auxilio.addPedido(p);
 					
 				}else {
@@ -112,7 +116,7 @@ public class AuxilioService {
 	
 	protected TipoCamion getTipoCamionByPedido(Pedido p) {
 		TipoCamion tipoCamion = null;
-		if(!p.getTipoAuxilio().isNecesitaRemolque()) {
+		if(!p.getTipoAuxilio().isNecesitaRemolque() && p.getTipoAuxilio().getReparacion() == TipoReparacion.SIMPLE) {
 			tipoCamion = TipoCamion.MINI_TALLER;
 		}else if(p.getTipoAuxilio().isNecesitaRemolque() &&
 				p.getCliente().getVehiculo().getPeso() <= 3000) {
