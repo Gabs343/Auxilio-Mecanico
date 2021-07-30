@@ -20,9 +20,9 @@ public class VehiculoService {
 		}
 				
 		if(remolques != null) {
-			v.setReparaciones(remolques + 1); 
+			v.setRemolques(remolques + 1); 
 		}else {
-			v.setReparaciones(1); 
+			v.setRemolques(1); 
 		}
 	}
 	
@@ -40,6 +40,24 @@ public class VehiculoService {
 			v.setReparaciones(1); 
 		}
 		
+	}
+	
+	public Integer getTotalReparaciones(Vehiculo v, List<Pedido> pedidos) {
+		Integer reparaciones = 0;
+		
+		if(!pedidos.isEmpty()) {
+			reparaciones = pedidos.get(pedidos.size() - 1).getCliente().getVehiculo().getReparaciones();
+		}
+		return reparaciones;
+	}
+	
+	public Integer getTotalRemolques(Vehiculo v, List<Pedido> pedidos) {
+		Integer remolques = 0;
+		
+		if(!pedidos.isEmpty()){
+			remolques = pedidos.get(pedidos.size() - 1).getCliente().getVehiculo().getRemolques();
+		}
+		return remolques;
 	}
 	
 	public Integer totalServicios(Vehiculo v) {
