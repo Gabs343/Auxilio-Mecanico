@@ -53,6 +53,8 @@ public class AuxilioService {
 					p.getCliente().getVehiculo().setReparaciones(vehiculoServ.getTotalReparaciones(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos())));
 					auxilio.addPedido(p);
 					
+					camionServ.añadirPedido(p.getCamion(), p);
+					
 				}else {
 					throw new NoPermiteRemolques("No se aceptan remolques");
 				}
@@ -69,6 +71,8 @@ public class AuxilioService {
 					
 					p.getCliente().getVehiculo().setRemolques(vehiculoServ.getTotalRemolques(p.getCliente().getVehiculo(), pedidoServ.pedidosDeCliente(p.getCliente(), auxilio.getPedidos())));
 					auxilio.addPedido(p);
+					
+					camionServ.añadirPedido(p.getCamion(), p);
 					
 				}else {
 					throw new NoPermiteReparaciones("No se aceptan reparaciones");	
@@ -94,11 +98,17 @@ public class AuxilioService {
 	}
 	
 	public void responderConCamion(Pedido p) {
+		
 		TipoCamion tipoCamion = getTipoCamionByPedido(p);
 		Camion camion = getCamionByTipo(tipoCamion, p.getTipoAuxilio().getReparacion());
+		
+		if(!pedidoServ.getPedidosByCamion(camion, auxilio.getPedidos()).isEmpty()) {
+
+			camionServ.añadirPedidos(camion, pedidoServ.getPedidosByCamion(camion, pedidoServ.getPedidosNoFinalizados(auxilio.getPedidos())));
+		}
+	
 		pedidoServ.añadirCamion(p, camion);
 		pedidoServ.actualizarCosto(p, camion.getCosto());
-		camion.setOcupado(true);
 		
 	}	
 	
@@ -170,6 +180,11 @@ public class AuxilioService {
 		
 	}
 	
+	public void terminarPedido(Pedido p) {
+		pedidoServ.setStatus(p, true);
+		camionServ.eliminarPedido(p.getCamion(), p);
+		System.out.println("Se ha finalizado el pedido del cliente: " + p.getCliente().getNombre() + " " + p.getCliente().getApellido());
+	}
 	
 	public void listaDePedidos() {
 		auxilio.getPedidos().stream().forEach(p -> System.out.println(p.toString()));
