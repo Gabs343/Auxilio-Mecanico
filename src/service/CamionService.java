@@ -1,12 +1,16 @@
 package service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.ArrayList;
 
 import domain.Camion;
 import domain.CamionGranGrua;
 import domain.CamionMiniGrua;
 import domain.CamionMiniTaller;
 import domain.Cliente;
+import domain.Pedido;
+import domain.TipoCamion;
 import domain.TipoReparacion;
 
 public class CamionService {
@@ -31,6 +35,17 @@ public class CamionService {
 		camion.setOcupado(false);
 	}
 	
+	public void añadirPedido(Camion c, Pedido p) {
+		c.setPedido(p);
+		c.setOcupado(true);
+	}
 	
+	public void añadirPedidos(Camion c, List<Pedido> pedidos) {
+		c.setPedidos(pedidos);
+	}
+	
+	public void eliminarPedido(Camion c, Pedido p) {
+		c.getPedidos().remove(p);
+	}
 	
 }
