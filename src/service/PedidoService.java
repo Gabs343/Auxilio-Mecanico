@@ -36,5 +36,21 @@ public class PedidoService {
 		return pedidosDeCliente;
 	}
 	
+	public List<Pedido> getPedidosByCamion(Camion c, List<Pedido> pedidos){
+		List<Pedido> pedidosConCamion = 
+				pedidos.stream().filter(p -> p.getCamion().equals(c)).collect(Collectors.toList());;
+		return pedidosConCamion;
+	}
+	
+	public void setStatus(Pedido p, boolean finalizado) {
+		p.setFinalizado(finalizado);
+	}
+	
+	public List<Pedido> getPedidosNoFinalizados(List<Pedido> pedidos){
+		List<Pedido> pedidosConCamion = 
+				pedidos.stream().filter(p -> !p.isFinalizado()).collect(Collectors.toList());;
+		return pedidosConCamion;
+	}
+	
 	
 }
