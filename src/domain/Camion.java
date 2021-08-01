@@ -1,6 +1,8 @@
 package domain;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.ArrayList;
 
 public abstract class Camion {
 	
@@ -10,6 +12,7 @@ public abstract class Camion {
 	private BigDecimal costo;
 	private boolean tieneTaller;
 	private boolean ocupado;
+	private List<Pedido> pedidos;
 	
 	public Camion(TipoCamion tipoCamion, TipoReparacion tipoReparacion, Double limitePeso, BigDecimal costo, boolean tieneTaller, boolean ocupado) {
 		
@@ -19,6 +22,7 @@ public abstract class Camion {
 		this.costo = costo;
 		this.tieneTaller = tieneTaller;
 		this.ocupado = ocupado;
+		pedidos = new ArrayList<Pedido>();
 	}
 
 	public TipoCamion getTipoCamion() {
@@ -29,6 +33,18 @@ public abstract class Camion {
 		this.tipoCamion = tipoCamion;
 	}
 	
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
+	public void setPedido(Pedido p) {
+		pedidos.add(p);
+	}
+
 	public TipoReparacion getTipoReparacion() {
 		return tipoReparacion;
 	}
@@ -73,7 +89,29 @@ public abstract class Camion {
 	@Override
 	public String toString() {
 		return "Camion [tipoCamion=" + tipoCamion + ", limitePeso=" + limitePeso + ", costo=" + costo + ", tieneTaller="
-				+ tieneTaller + ", ocupado=" + ocupado + "]";
+				+ tieneTaller + ", ocupado=" + ocupado + ", pedidos=" + pedidos.size() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((tipoCamion == null) ? 0 : tipoCamion.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Camion other = (Camion) obj;
+		if (tipoCamion != other.tipoCamion)
+			return false;
+		return true;
 	}
 	
 	
